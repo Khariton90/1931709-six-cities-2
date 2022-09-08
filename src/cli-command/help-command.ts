@@ -13,8 +13,8 @@ export class HelpCommand implements ICliCommand {
 
       Команды:
         --version:                     # выводит номер версии
-        --help:                        # выводит номер версии
-        --import <path>:               # выводит номер версии
+        --help:                        # выводит помощь
+        --import <path>:               # выводит импорт из TSV
         --generator <n> <path> <url>:  # генерирует произвольное количество текстовых данных
   `));
   }
