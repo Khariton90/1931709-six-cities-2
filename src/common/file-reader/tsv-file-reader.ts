@@ -1,75 +1,35 @@
-import { Offer } from './../../types/offer.type';
-import { readFileSync } from 'fs';
+import EventEmitter from 'events';
+import { createReadStream } from 'fs';
 import { IFileReader } from './file-reader.interface';
 
-export default class TSVFileReader implements IFileReader {
-  private rawData = '';
-
-  constructor(public filename: string) {}
-
-  public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: 'utf-8' });
+export default class TSVFileReader extends EventEmitter implements IFileReader {
+  constructor(public filename: string) {
+    super();
   }
 
-  public toArray(): Offer[] {
-    if (!this.rawData) {
-      return [];
+  public async read(): Promise<void> {
+    const stream = createReadStream(this.filename, {
+      highWaterMark: 16384,
+      encoding: 'utf-8',
+    });
+
+    let lineRead = '';
+    let endLinePosition = -1;
+    let importedRowCount = 0;
+
+    for await (const chunk of stream) {
+      lineRead += chunk.toString();
+
+      while((endLinePosition = lineRead.indexOf('\n')) >= 0) {
+        const completeRow = lineRead.slice(0, endLinePosition + 1);
+        lineRead = lineRead.slice(++endLinePosition);
+        importedRowCount++;
+
+        this.emit('line', completeRow);
+      }
     }
 
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim() !== '')
-      .map((line) => line.split('~'))
-      .map((
-        [
-          title,
-          description,
-          postDate,
-          city,
-          lat,
-          lng,
-          previewImage,
-          images,
-          isPremium,
-          isFavorite,
-          rating,
-          type,
-          rooms,
-          guests,
-          price,
-          amenityes,
-          author,
-          comments,
-          latitude,
-          longitude
-        ]) => ({
-        title,
-        description,
-        postDate: new Date(postDate),
-        city: {
-          name: city,
-          location: {
-            latitude: Number(lat),
-            longitude: Number(lng)
-          }
-        },
-        previewImage,
-        images: images.split(';'),
-        isPremium: JSON.parse(isPremium),
-        isFavorite: JSON.parse(isFavorite),
-        rating: Number(rating),
-        type,
-        rooms: Number(rooms),
-        guests: Number(guests),
-        price: Number(price),
-        amenityes: amenityes.split(';'),
-        author,
-        comments: Number(comments),
-        location: {
-          latitude: Number(latitude),
-          longitude: Number(longitude)
-        }
-      }));
+    this.emit('end', importedRowCount);
   }
 }
 
