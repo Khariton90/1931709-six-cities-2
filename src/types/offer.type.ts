@@ -1,6 +1,13 @@
 import { City } from './city.type';
 import { Location } from './location.type.js';
 
+export type User = {
+  id: number,
+  name: string,
+  isPro: boolean,
+  avatarUrl: string
+}
+
 export type Offer = {
   title: string,
   description: string,
@@ -16,7 +23,7 @@ export type Offer = {
   guests: number,
   price: number,
   amenityes: string[],
-  author: string,
+  author: User,
   comments: number,
   location: Location,
 }

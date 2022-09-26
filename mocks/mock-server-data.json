@@ -1,0 +1,90 @@
+{
+  "api": {
+    "titles": [
+      "Penthouse, 4-5 rooms + 5 balconies",
+      "Nice, cozy, warm big bed apartment",
+      "Loft Studio in the Central Area",
+      "Amazing and Extremely Central Flat",
+      "Wood and stone place"
+    ],
+    "descriptions": [
+      "This is a place for dreamers to reset, reflect, and create. Designed with a 'slow' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets.",
+      "I am happy to welcome you to my apartment in the city center! Three words: location, cosy and chic!",
+      "Discover daily local life in city center, friendly neighborhood, clandestine casino, karaoke, old-style artisans, art gallery and artist studio downstairs.",
+      "Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance.",
+      "Discover daily local life in city center, friendly neighborhood, clandestine casino, karaoke, old-style artisans, art gallery and artist studio downstairs."
+    ],
+    "city": [
+      "Paris",
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
+    ],
+    "previewImage": [
+      "https://10.react.pages.academy/static/hotel/19.jpg",
+      "https://10.react.pages.academy/static/hotel/19.jpg",
+      "https://10.react.pages.academy/static/hotel/19.jpg",
+      "https://10.react.pages.academy/static/hotel/19.jpg",
+      "https://10.react.pages.academy/static/hotel/19.jpg"
+    ],
+    "images": [
+      "https://10.react.pages.academy/static/hotel/3.jpg",
+      "https://10.react.pages.academy/static/hotel/2.jpg",
+      "https://10.react.pages.academy/static/hotel/15.jpg",
+      "https://10.react.pages.academy/static/hotel/20.jpg",
+      "https://10.react.pages.academy/static/hotel/9.jpg",
+      "https://10.react.pages.academy/static/hotel/10.jpg"
+    ],
+    "isPremium": false,
+    "isFavorite": false,
+    "rating": 5,
+    "types": [
+      "apartment",
+      "house",
+      "room",
+      "hotel"
+    ],
+    "bedrooms": 8,
+    "maxAdults": 10,
+    "price": 654,
+    "goods": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "users": [
+      "Angelina",
+      "Angela",
+      "Elizaveta",
+      "Elena",
+      "Emma",
+      "Emmanuel"
+    ],
+    "avatars": [
+      "img/avatar-angelina.jpg",
+      "img/avatar-angelina.jpg",
+      "img/avatar-angelina.jpg",
+      "img/avatar-angelina.jpg",
+      "img/avatar-angelina.jpg",
+      "img/avatar-angelina.jpg"
+    ],
+    "host": {
+      "id": 25,
+      "name": "Angelina",
+      "isPro": true,
+      "avatarUrl": "img/avatar-angelina.jpg"
+    },
+    "location": {
+      "latitude": 48.843610000000005,
+      "longitude": 2.338499,
+      "zoom": 16
+    }
+  }
+}
