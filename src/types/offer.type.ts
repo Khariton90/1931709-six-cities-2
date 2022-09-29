@@ -1,12 +1,6 @@
+import { User } from './user.type';
 import { City } from './city.type';
-import { Location } from './location.type.js';
-
-export type User = {
-  id: number,
-  name: string,
-  isPro: boolean,
-  avatarUrl: string
-}
+import { Location } from './location.type';
 
 export type Offer = {
   title: string,
