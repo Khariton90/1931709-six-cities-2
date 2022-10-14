@@ -1,6 +1,7 @@
 export type User = {
-  id: number,
   name: string,
-  isPro: boolean,
+  email: string,
+  password: string,
+  isPro: string,
   avatarUrl: string
 }
