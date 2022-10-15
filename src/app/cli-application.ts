@@ -4,7 +4,6 @@ type ParsedCommand = {
   [key: string]: string[]
 }
 
-
 export default class CliApplication {
   private commands: {[propName: string]: ICliCommand} = {};
   private defaultCommand = '--help';

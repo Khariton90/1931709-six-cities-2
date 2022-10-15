@@ -1,7 +1,8 @@
+import crypto from 'crypto';
 import { Offer } from './../types/offer.type';
 
 export const createOffer = (row: string) => {
-  const tokens = row.replace('\n', '').split('\t');
+  const tokens = row.replace('\n', '').split('~');
   const [
     title,
     description,
@@ -18,8 +19,9 @@ export const createOffer = (row: string) => {
     guests,
     price,
     amenityes,
-    id,
     authorName,
+    email,
+    password,
     avatar,
     isPro,
     comments,
@@ -48,9 +50,10 @@ export const createOffer = (row: string) => {
     price: Number(price),
     amenityes: amenityes.split(';'),
     author: {
-      id: Number(id),
       name: authorName,
-      isPro: JSON.parse(isPro),
+      email,
+      password,
+      isPro: isPro,
       avatarUrl: avatar
     },
     comments: Number(comments),
@@ -58,7 +61,12 @@ export const createOffer = (row: string) => {
       latitude: Number(offerLocation.split(';').slice(0, 1)),
       longitude: Number(offerLocation.split(';').slice(1))
     }
-  } as Offer;
+  } as unknown as Offer;
 };
 
 export const getErrorMessage = (error: unknown): string => error instanceof Error ? error.message : '';
+
+export const createSHA256 = (line: string, salt: string): string => {
+  const shaHasher = crypto.createHmac('sha256', salt);
+  return shaHasher.update(line).digest('hex');
+};
