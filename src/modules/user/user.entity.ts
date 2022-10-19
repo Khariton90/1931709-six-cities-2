@@ -15,11 +15,11 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   constructor(data: User) {
     super();
 
-    this.name = data.name;
     this.email = data.email;
+    this.avatarUrl = data.avatarUrl;
+    this.name = data.name;
     this.password = data.password;
     this.isPro = data.isPro;
-    this.avatarUrl = data.avatarUrl;
   }
 
   @prop({required: true})

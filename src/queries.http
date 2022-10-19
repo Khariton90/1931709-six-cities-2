@@ -1,3 +1,8 @@
 GET http://localhost:3123/api HTTP/1.1
 
 ###
+
+GET  /posts HTTP/1.1
+Host: jsonplaceholder.typicode.com
+
+###

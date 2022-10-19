@@ -15,6 +15,5 @@ myManager.registerCommands([
   new GenerateCommand
 ]);
 
-console.log(process.argv);
 myManager.processCommand(process.argv);
 

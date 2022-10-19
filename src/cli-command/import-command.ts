@@ -43,6 +43,7 @@ export default class ImportCommand implements ICliCommand {
 
   private async onLine(line: string, resolve: () => void) {
     const offer = createOffer(line);
+
     await this.saveOffer(offer);
     resolve();
   }

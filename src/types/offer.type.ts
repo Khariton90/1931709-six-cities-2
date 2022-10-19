@@ -20,5 +20,4 @@ export type Offer = {
   author: User,
   comments: number,
   location: Location,
-  id: number
 }
