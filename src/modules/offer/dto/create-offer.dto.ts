@@ -1,6 +1,6 @@
-import { City } from '../../types/city.type.js';
-import { Location } from '../../types/location.type.js';
-import { User } from '../../types/user.type.js';
+import { City } from '../../../types/city.type.js';
+import { Location } from '../../../types/location.type.js';
+import { User } from '../../../types/user.type.js';
 
 export default class CreateOfferDto {
   public title!: string;

@@ -1,7 +1,8 @@
+import { CommentEntity, CommentModel } from './modules/comment/comment.entity.js';
+import 'reflect-metadata';
 import { IOfferService } from './modules/offer/offer-service.interface';
 import { OfferEntity, OfferModel } from './modules/offer/offer.entity.js';
 import { UserEntity, UserModel } from './modules/user/user.entity.js';
-import 'reflect-metadata';
 import { IDataBase } from './common/database-client/database.interface.js';
 import { Container } from 'inversify';
 import { Component } from './types/component.types.js';
@@ -15,6 +16,8 @@ import { IUserService } from './modules/user/user-service.interface.js';
 import UserService from './modules/user/user.service.js';
 import { types } from '@typegoose/typegoose';
 import OfferService from './modules/offer/offer.service.js';
+import { ICommentService } from './modules/comment/comment-service.interface.js';
+import CommentService from './modules/comment/comment.service.js';
 
 const appContainer = new Container();
 
@@ -24,8 +27,10 @@ appContainer.bind<IConfig>(Component.IConfig).to(ConfigService).inSingletonScope
 appContainer.bind<IDataBase>(Component.IDataBase).to(DatabaseService).inSingletonScope();
 appContainer.bind<IUserService>(Component.IUserService).to(UserService);
 appContainer.bind<IOfferService>(Component.IOffelService).to(OfferService);
+appContainer.bind<ICommentService>(Component.ICommentService).to(CommentService);
 appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantValue(UserModel);
 appContainer.bind<types.ModelType<OfferEntity>>(Component.OfferModel).toConstantValue(OfferModel);
+appContainer.bind<types.ModelType<CommentEntity>>(Component.CommentModel).toConstantValue(CommentModel);
 
 const app = appContainer.get<Application>(Component.Application);
 await app.init();

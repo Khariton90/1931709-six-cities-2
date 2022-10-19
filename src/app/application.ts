@@ -10,7 +10,8 @@ export default class Application {
   constructor(
     @inject(Component.ILogger) private logger: ILogger,
     @inject(Component.IConfig) private config: IConfig,
-    @inject(Component.IDataBase) private databaseClient: IDataBase) {}
+    @inject(Component.IDataBase) private databaseClient: IDataBase
+  ) {}
 
   public async init() {
     this.logger.info('App initialization...');
