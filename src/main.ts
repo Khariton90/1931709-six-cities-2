@@ -1,3 +1,4 @@
+import { IOfferService } from './modules/offer/offer-service.interface';
 import { OfferEntity, OfferModel } from './modules/offer/offer.entity.js';
 import { UserEntity, UserModel } from './modules/user/user.entity.js';
 import 'reflect-metadata';
@@ -13,6 +14,7 @@ import LoggerService from './common/logger/logger.service.js';
 import { IUserService } from './modules/user/user-service.interface.js';
 import UserService from './modules/user/user.service.js';
 import { types } from '@typegoose/typegoose';
+import OfferService from './modules/offer/offer.service.js';
 
 const appContainer = new Container();
 
@@ -21,6 +23,7 @@ appContainer.bind<ILogger>(Component.ILogger).to(LoggerService).inSingletonScope
 appContainer.bind<IConfig>(Component.IConfig).to(ConfigService).inSingletonScope();
 appContainer.bind<IDataBase>(Component.IDataBase).to(DatabaseService).inSingletonScope();
 appContainer.bind<IUserService>(Component.IUserService).to(UserService);
+appContainer.bind<IOfferService>(Component.IOffelService).to(OfferService);
 appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantValue(UserModel);
 appContainer.bind<types.ModelType<OfferEntity>>(Component.OfferModel).toConstantValue(OfferModel);
 
