@@ -5,6 +5,8 @@ export const Component = {
   IDataBase: Symbol.for('IDataBase'),
   IUserService: Symbol.for('IUserService'),
   IOffelService: Symbol.for('IOffelService'),
+  ICommentService: Symbol.for('ICommentService'),
   UserModel: Symbol.for('UserModel'),
   OfferModel: Symbol.for('OfferModel'),
+  CommentModel: Symbol.for('CommentModel'),
 } as const;
