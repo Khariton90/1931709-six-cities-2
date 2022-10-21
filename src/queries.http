@@ -1,3 +1,69 @@
 GET http://localhost:3123/api HTTP/1.1
 
 ###
+
+POST  http://localhost:4000/offers/create HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "Nice",
+    "images": [
+        "http://image.jpg",
+        "http://image.jpg",
+        "http://image.jpg",
+        "http://image.jpg",
+        "http://image.jpg",
+        "http://image.jpg"
+    ],
+    "isPremium": false,
+    "isFavorite": false,
+    "previewImage": "http://imagePreview.jpg",
+    "location": {
+        "latitude": 48.843610000000005,
+        "longitude": 2.338499
+    }
+}
+###
+
+POST  http://localhost:4000/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "hello",
+    "email": "fafa@mail.ru",
+    "password": "43234244",
+    "isPro": "true",
+    "avatarUrl": "fsfdffd"
+}
+###
+
+POST http://localhost:4000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Aelina",
+    "email": "2@gmail.com",
+    "password": "4a83854cf6f0112b4295bddd535a9b3fbe54a3f90e853b59d42e4bed553c55a4",
+    "isPro": "false",
+    "avatarUrl": "image",
+}
+###
+
+DELETE  http://localhost:4000/offers/634e92ea7dd68f8986a447c7/delete HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "634e92ea7dd68f8986a447c7"
+}
+###
+
+PATCH   http://localhost:4000/offers/634e92ea7dd68f8986a447cc/update HTTP/1.1
+Content-Type: application/json
+
+{
+    "_id": "634e92ea7dd68f8986a447cc",
+    "title": "Nice Apartment"
+}
+###
+
+

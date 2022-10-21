@@ -3,6 +3,7 @@ import { Location } from '../../../types/location.type.js';
 import { User } from '../../../types/user.type.js';
 
 export default class UpdateOfferDto {
+  public _id!: string;
   public title?: string;
   public description?: string;
   public postDate?: Date;
