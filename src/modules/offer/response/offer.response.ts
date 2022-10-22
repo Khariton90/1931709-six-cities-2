@@ -1,7 +1,7 @@
-import { UserEntity } from './../../user/user.entity.js';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { City } from '../../../types/city.type.js';
 import { Location } from '../../../types/location.type.js';
+import UserResponse from '../../user/response/user.response.js';
 
 export default class OfferResponse {
   @Expose()
@@ -46,8 +46,9 @@ export default class OfferResponse {
   @Expose()
   public amenityes!: string[];
 
-  @Expose()
-  public userId!: UserEntity;
+  @Expose({name: 'userId'})
+  @Type(() => UserResponse)
+  public author!: UserResponse;
 
   @Expose()
   public comments!: number;

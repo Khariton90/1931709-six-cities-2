@@ -19,8 +19,12 @@ export abstract class Controller implements IController {
   }
 
   public addRoute(route: IRoute): void {
-    this._router[route.method](route.path, asyncHandler(route.handler.bind(this)));
-    this.logger.info(`Route regisered: ${route.method.toUpperCase()} ${route.path}`);
+    const routeHandler = asyncHandler(route.handler.bind(this));
+    const middlewares = route.middlewares?.map((middleware) => asyncHandler(middleware.execute.bind(middleware)));
+    const allHandlers = middlewares ? [...middlewares, routeHandler] : routeHandler;
+
+    this._router[route.method](route.path, allHandlers);
+    this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {

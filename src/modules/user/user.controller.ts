@@ -1,3 +1,4 @@
+import { ValidateDtoMiddleware } from './../../common/middlewares/validate-dto.middleware.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
 import { IConfig } from './../../common/config/config.interface.js';
 import { Response, Request } from 'express';
@@ -22,11 +23,11 @@ export default class UserController extends Controller {
   ) {
     super(logger);
 
-    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
-    this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)]});
+    this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateUserDto)]});
   }
 
-  public async login({body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>, _res: Response): Promise<void> {
+  public async login({body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>, res: Response): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);
 
     if (!existsUser) {
@@ -37,7 +38,7 @@ export default class UserController extends Controller {
       );
     }
 
-    throw new HttpError(StatusCodes.NOT_IMPLEMENTED, 'Not Implementer', 'UserController');
+    this.ok(res, existsUser);
   }
 
   public async create(

@@ -8,9 +8,6 @@ export default class UserResponse {
   public email!: string;
 
   @Expose()
-  public password!: string;
-
-  @Expose()
   public isPro!: string;
 
   @Expose()
