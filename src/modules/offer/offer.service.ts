@@ -19,7 +19,6 @@ export default class OfferService implements IOfferService {
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
     const result = await this.offerModel.create(dto);
     this.logger.info(`New offer created: ${dto.title}`);
-
     return result;
   }
 
@@ -29,7 +28,7 @@ export default class OfferService implements IOfferService {
 
   public async find(): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
-      .find({}, {}, {limit: DEFAULT_OFFER_COUNT}).populate(['userId']).exec();
+      .find().populate(['userId']).exec();
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {

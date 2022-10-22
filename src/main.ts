@@ -1,5 +1,7 @@
-import { CommentEntity, CommentModel } from './modules/comment/comment.entity.js';
+import { IExceptionFilter } from './common/errors/exception-filter.interface.js';
 import 'reflect-metadata';
+import { types } from '@typegoose/typegoose';
+import { CommentEntity, CommentModel } from './modules/comment/comment.entity.js';
 import { IOfferService } from './modules/offer/offer-service.interface';
 import { OfferEntity, OfferModel } from './modules/offer/offer.entity.js';
 import { UserEntity, UserModel } from './modules/user/user.entity.js';
@@ -14,10 +16,13 @@ import ConfigService from './common/config/config.service.js';
 import LoggerService from './common/logger/logger.service.js';
 import { IUserService } from './modules/user/user-service.interface.js';
 import UserService from './modules/user/user.service.js';
-import { types } from '@typegoose/typegoose';
 import OfferService from './modules/offer/offer.service.js';
 import { ICommentService } from './modules/comment/comment-service.interface.js';
 import CommentService from './modules/comment/comment.service.js';
+import { IController } from './common/controller/controller.interface.js';
+import OfferController from './modules/offer/offer.controller.js';
+import UserController from './modules/user/user.controller.js';
+import ExceptionFilter from './common/errors/exception-filter.js';
 
 const appContainer = new Container();
 
@@ -31,6 +36,10 @@ appContainer.bind<ICommentService>(Component.ICommentService).to(CommentService)
 appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantValue(UserModel);
 appContainer.bind<types.ModelType<OfferEntity>>(Component.OfferModel).toConstantValue(OfferModel);
 appContainer.bind<types.ModelType<CommentEntity>>(Component.CommentModel).toConstantValue(CommentModel);
+
+appContainer.bind<IController>(Component.OfferController).to(OfferController).inSingletonScope();
+appContainer.bind<IController>(Component.UserController).to(UserController).inSingletonScope();
+appContainer.bind<IExceptionFilter>(Component.IExceptionFilter).to(ExceptionFilter).inSingletonScope();
 
 const app = appContainer.get<Application>(Component.Application);
 await app.init();

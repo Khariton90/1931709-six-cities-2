@@ -13,57 +13,56 @@ export interface OfferEntity extends defaultClasses.Base {}
   }
 })
 export class OfferEntity extends defaultClasses.TimeStamps {
-  @prop({trim: true, required: true})
+  @prop({trim: true})
   public title!: string;
 
   @prop({trim: true})
   public description!: string;
 
-  @prop({required: true})
+  @prop()
   public postDate!: Date;
 
-  @prop({required: true})
+  @prop()
   public city!: City;
 
-  @prop({required: true})
+  @prop()
   public previewImage!: string;
 
-  @prop({required: true, default: []})
+  @prop({ default: []})
   public images!: string[];
 
-  @prop({required: true, default: false})
+  @prop({default: false})
   public isPremium!: boolean;
 
-  @prop({required: true, default: false})
+  @prop({default: false})
   public isFavorite!: boolean;
 
-  @prop({required: true, default: 0})
+  @prop({default: 0})
   public rating!: number;
 
-  @prop({trim: true, required: true})
+  @prop({trim: true})
   public type!: string;
 
-  @prop({required: true, default: 0})
+  @prop({default: 0})
   public rooms!: number;
 
-  @prop({required: true, default: 0})
+  @prop({default: 0})
   public guests!: number;
 
-  @prop({required: true})
+  @prop()
   public price!: number;
 
-  @prop({required: true, default: []})
+  @prop({default: []})
   public amenityes!: string[];
 
   @prop({default: 0})
   public comments!: number;
 
-  @prop({required: true})
+  @prop()
   public location!: Location;
 
   @prop({
     ref: UserEntity,
-    required: true
   })
   public userId!: Ref<UserEntity>;
 }

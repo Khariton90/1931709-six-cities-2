@@ -348,7 +348,8 @@ components:
             'conditioning',
             'Laptop',
             'friendly',
-            'Washer']
+            'Washer'
+            ]
 
         comments:
           type: number
@@ -358,7 +359,8 @@ components:
           type: object
           example: {
             "latitude": 48.843610000000005,
-            "longitude": 2.338499}
+            "longitude": 2.338499
+            }
 
         userId:
           type: string
