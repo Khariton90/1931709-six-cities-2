@@ -23,6 +23,7 @@ import { IController } from './common/controller/controller.interface.js';
 import OfferController from './modules/offer/offer.controller.js';
 import UserController from './modules/user/user.controller.js';
 import ExceptionFilter from './common/errors/exception-filter.js';
+import CommentController from './modules/comment/comment.controller.js';
 
 const appContainer = new Container();
 
@@ -39,6 +40,7 @@ appContainer.bind<types.ModelType<CommentEntity>>(Component.CommentModel).toCons
 
 appContainer.bind<IController>(Component.OfferController).to(OfferController).inSingletonScope();
 appContainer.bind<IController>(Component.UserController).to(UserController).inSingletonScope();
+appContainer.bind<IController>(Component.CommentController).to(CommentController).inSingletonScope();
 appContainer.bind<IExceptionFilter>(Component.IExceptionFilter).to(ExceptionFilter).inSingletonScope();
 
 const app = appContainer.get<Application>(Component.Application);

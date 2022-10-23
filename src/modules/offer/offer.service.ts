@@ -28,7 +28,7 @@ export default class OfferService implements IOfferService {
 
   public async find(): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
-      .find().populate(['userId']).exec();
+      .find().sort({createdAt: SortType.Down}).populate(['userId']).exec();
   }
 
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
