@@ -1,0 +1,332 @@
+openapi: '3.0.2'
+info:
+  title: API сервер для проекта «Шесть городов»
+  description: |-
+    * Список ресурсов и маршрутов сервера «Шесть городов»
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+
+tags:
+- name: offers
+  description: Действия с объявлениями
+- name: users
+  description: Действия с пользователем
+- name: comments
+  description: Действия с комментариями
+
+paths:
+  /offers/:
+    get:
+      tags:
+        - "offers"
+      summary: Получение списка предложений.
+      description: Получение массива предложений. По умолчанию не более 60 предложений.
+
+      responses:
+          "200":
+            description: Получен список предложений.
+
+          "500":
+            description: Ошибка сервера.
+
+  /offers/:offerId:
+    get:
+      tags:
+        - "offers"
+      summary: Получение предложения
+      description: Получение предложения по идентификатору.
+
+      responses:
+        "200":
+          description: Предложение с идентификатором offeId. Объект offer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+        "404":
+          description: Пользователь не найден.
+
+  /offers/create:
+    post:
+      tags:
+        - "offers"
+      summary: Создание предложения
+      description: Создание нового предложения
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offers'
+        required: true
+
+      responses:
+        "201":
+          description: Новое предложение создано. Объект offer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+        "400":
+          description: Неверный формат данных
+
+        "401":
+          description: Пользователь неавторизован.
+
+  /offers/:offerId/delete:
+    delete:
+      tags:
+        - "offers"
+      summary: Удаление предложения
+      description: Удаление предложения по идентификатору.
+
+      responses:
+        "204":
+          description: Предложение удалено.
+
+        "404":
+          description: Предложение не найдено.
+
+  /offers/:offerId/update:
+    patch:
+      tags:
+        - "offers"
+      summary: Обновление предложения
+      description: Обновление предложения по идентификатору.
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offers'
+        required: true
+
+      responses:
+        "204":
+          description: Предложение обновлено. Объект offer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+        "400":
+          description: Неверный формат данных
+
+        "401":
+          description: Пользователь неавторизован.
+
+  /users/login:
+    post:
+      tags:
+        - "users"
+      summary: Авторизация пользователя
+      description: Авторизация по email и password
+
+      requestBody:
+        description: Информация для Авторизация.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/usersLogin'
+        required: true
+
+      responses:
+        "200":
+          description: Пользователь авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users'
+
+        "400":
+          description: Неверный формат данных
+
+        "404":
+          description: Пользователь не найден.
+
+  /comments/:offerId:
+    post:
+      tags:
+        - "comments"
+      summary: Добавление комментария.
+      description: Добавление нового комментария по идентификатору предложения.
+
+      requestBody:
+        description: Информация для добавления нового комментария
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/comments'
+        required: true
+
+      responses:
+        "201":
+          description: Комментарий добавлен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comments'
+        
+        "400":
+          description: Неверный формат данных
+
+        "404":
+          description: Пользователь не найден.
+
+components:
+  schemas:
+    offers:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Penthouse, 4-5 rooms + 5 balconies"
+
+        description:
+          type: string
+          example: "Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance."
+
+        postDate:
+          type: string
+          example: "2022-09-08T14:30:30.182Z"
+
+        city: 
+          type: object
+          example: {
+            name: "Cologne",
+            location: {
+              "latitude": 50.938361,
+              "longitude": 6.959974,
+            }
+          }
+
+        previewImage:
+          type: string
+          example: "https://10.react.pages.academy/static/hotel/4.jpg"
+
+        images:
+          type: array
+          example: [
+              "https://10.react.pages.academy/static/hotel/17.jpg",
+              "https://10.react.pages.academy/static/hotel/9.jpg",
+              "https://10.react.pages.academy/static/hotel/10.jpg",
+              "https://10.react.pages.academy/static/hotel/14.jpg",
+              "https://10.react.pages.academy/static/hotel/6.jpg",
+              "https://10.react.pages.academy/static/hotel/5.jpg"
+          ]
+
+        isPremium:
+          type: boolean
+          example: false
+
+        isFavorite:
+          type: boolean
+          example: false
+
+        rating:
+          type: number
+          example: 5
+
+        type:
+          type: string
+          example: "apartment"
+
+        rooms:
+          type: number
+          example: 3
+
+        guests:
+          type: number
+          example: 5
+
+        price:
+          type: number
+          example: 1000
+
+        amenityes:
+          type: array
+          example: [
+            "Dishwasher",
+            "Air conditioning",
+            "Breakfast",
+            "Baby seat",
+            "Fridge",
+            "Washer",
+            "Towels",
+            "Coffee machine",
+            "Laptop friendly workspace"
+          ]
+
+        userId:
+          type: string
+          example: "634e92ea7dd68f8986a447ca"
+
+        comments:
+          type: number
+          example: 3
+
+        location:
+          type: object
+          example: {
+            "latitude": 50.934361,
+            "longitude": 6.943974,
+          }
+
+    users:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Angelina'
+        
+        email:
+          type: string
+          example: 'email@gmail.com'
+        
+        password:
+          type: string
+          example:
+
+        isPro:
+          type: boolean
+          example: true
+        
+        avatarUrl:
+          type: string
+          example: "https://htmlacademy/avatar.jpg"
+
+    usersLogin:
+      type: object
+      properties:
+        password:
+          type: string
+          example: "4a83854cf6f0112b4295bddd535a9b3fbe54a3f90e853b59d42e4bed553c55a4"
+
+        email:
+          type: string
+          example: "mail@gmail.com"
+
+    comments:
+      type: object
+      properties:
+        commentText:
+          type: string
+          example: Hello world
+
+        rating:
+          type: number
+          example: 5
+
+        userId:
+          type: string
+          example: "634e92ea7dd68f8986a447ca"
+
+        offerId:
+          type: string
+          example: "634e92ea7dd68f8986a447cc"

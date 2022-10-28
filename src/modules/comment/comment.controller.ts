@@ -1,3 +1,4 @@
+import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateObjectIdMiddleware } from './../../common/middlewares/validate-objectid.middleware.js';
 import { fillDTO } from './../../utils/common.js';
 import { ICommentService } from './comment-service.interface.js';
@@ -25,8 +26,16 @@ export default class CommentController extends Controller{
   ) {
     super(logger);
     this.logger.info('Register routes for CommentController');
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this. getComments, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this. getComments, middlewares: [
+      new ValidateObjectIdMiddleware('offerId'),
+      new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+    ]
+    });
+    this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create, middlewares: [
+      new ValidateObjectIdMiddleware('offerId'),
+      new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+    ]
+    });
   }
 
   public async getComments({params}: Request<core.ParamsDictionary | ParamsGetComments>, res: Response): Promise<void> {
