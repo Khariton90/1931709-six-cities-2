@@ -1,3 +1,4 @@
+import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateDtoMiddleware } from './../../common/middlewares/validate-dto.middleware.js';
 import { ValidateObjectIdMiddleware } from './../../common/middlewares/validate-objectid.middleware.js';
 import { StatusCodes } from 'http-status-codes';
@@ -28,9 +29,31 @@ export default class OfferController extends Controller {
 
     this.logger.info('Register routes for OfferController');
 
-    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/create', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]});
-    this.addRoute({path: '/:offerId/delete', method: HttpMethod.Delete, handler: this.delete, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
+    this.addRoute({
+      path: '/', method:
+      HttpMethod.Get,
+      handler: this.index
+    });
+
+    this.addRoute({
+      path: '/create',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [
+        new ValidateDtoMiddleware(CreateOfferDto)]
+      ,
+    });
+
+    this.addRoute({
+      path: '/:offerId/delete',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
+
     this.addRoute(
       {
         path: '/:offerId/update',
@@ -38,10 +61,17 @@ export default class OfferController extends Controller {
         handler: this.update,
         middlewares: [
           new ValidateObjectIdMiddleware('offerId'),
-          new ValidateDtoMiddleware(UpdateOfferDto)
+          new ValidateDtoMiddleware(UpdateOfferDto),
+          new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
         ]
       });
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.show, middlewares: [new ValidateObjectIdMiddleware('offerId')]});
+
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.show,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
