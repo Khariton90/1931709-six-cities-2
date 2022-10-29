@@ -17,7 +17,7 @@ Content-Type: application/json
     ],
     "isPremium": false,
     "isFavorite": false,
-    "description": "fffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "description": "hello world",
     "postDate": "2022-09-08T14:30:30.182Z",
     "rating": 5,
     "rooms": 2,
@@ -38,11 +38,11 @@ POST  http://localhost:4000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "hello",
-    "email": "fafa@mail.ru",
-    "password": "43234244",
+    "name": "Evgeniy",
+    "email": "evgeniy@mail.ru",
+    "password": "123456",
     "isPro": "true",
-    "avatarUrl": "fsfdffd"
+    "avatarUrl": "evgeniy.png"
 }
 ###
 
@@ -50,16 +50,12 @@ POST http://localhost:4000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Aelina",
-    "email": "2@gmail.com",
-    "password": "4a83854cf6f0112b4295bddd535a9b3fbe54a3f90e853b59d42e4bed553c55a4",
-    "isPro": "false",
-    "avatarUrl": "image",
+    "email": "evgeniy@mail.ru",
+    "password": "123456"
 }
 ###
 
 DELETE  http://localhost:4000/offers/635419bfb84a94dbcc83e4d9/delete HTTP/1.1
-
 ###
 
 PATCH   http://localhost:4000/offers/634e92ea7dd68f8986a447cc HTTP/1.1
@@ -71,9 +67,9 @@ Content-Type: application/json
 }
 ###
 
-GET  http://localhost:4000/offers/634e92ea7dd68f8986a447cc HTTP/1.1
+## Получение офферов
+GET  http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
-
 ###
 
 GET  http://localhost:4000/comments/634e92ea7dd68f8986a447cc HTTP/1.1
@@ -82,11 +78,11 @@ GET  http://localhost:4000/comments/634e92ea7dd68f8986a447cc HTTP/1.1
 
 POST  http://localhost:4000/comments/634e92ea7dd68f8986a447cc HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM1ZDgxNjY1NzQ1ZjUxMDQzYTAwYjJhIiwiaWF0IjoxNjY3MDc2NzY1LCJleHAiOjE2NjcyNDk1NjV9.wH5onG0ueaEbs5uU3Renm97z_PDKA4yHDNHwySL54KY
 
 {
     "commentText": "Hello worlddsadasdad!!!",
     "rating": 5,
-    "userId": "634e92ea7dd68f8986a447ca",
     "offerId": "634e92ea7dd68f8986a447cc"
 }
 ###
@@ -103,4 +99,10 @@ Content-Type: image/png
 < /Users/china/Documents/avatar.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
+###
+
+## Проверка токена пользователя
+GET  http://localhost:4000/users/auth HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM1ZDgxNjY1NzQ1ZjUxMDQzYTAwYjJhIiwiaWF0IjoxNjY3MDc2NzY1LCJleHAiOjE2NjcyNDk1NjV9.wH5onG0ueaEbs5uU3Renm97z_PDKA4yHDNHwySL54KY
 ###

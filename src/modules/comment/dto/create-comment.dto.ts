@@ -9,7 +9,6 @@ export default class CreateCommentDto {
   @Length(1, 5, {message: 'Min value 1, max 5'})
   public rating!: number;
 
-  @IsMongoId({message: 'user id must be valid id'})
   public userId!: string;
 
   @IsMongoId({message: 'offer id must be valid id'})
