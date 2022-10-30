@@ -40,7 +40,7 @@ export default class UserController extends Controller {
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
       ]
     });
-    this.addRoute({path: '/auth', method: HttpMethod.Get, handler: this.checkAuthenticate})
+    this.addRoute({path: '/auth', method: HttpMethod.Get, handler: this.checkAuthenticate});
   }
 
   public async login({body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>, res: Response): Promise<void> {
