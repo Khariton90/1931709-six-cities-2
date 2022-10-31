@@ -1,3 +1,5 @@
+import { PrivateRouteMiddleware } from './../../common/middlewares/private-route.middleware.js';
+import { StatusCodes } from 'http-status-codes';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateObjectIdMiddleware } from './../../common/middlewares/validate-objectid.middleware.js';
 import { fillDTO } from './../../utils/common.js';
@@ -12,6 +14,7 @@ import { ILogger } from '../../common/logger/logger.interface.js';
 import CreateCommentDto from './dto/create-comment.dto.js';
 import CommentResponse from './response/comment.response.js';
 import * as core from 'express-serve-static-core';
+import HttpError from '../../common/errors/http-error.js';
 
 type ParamsGetComments = {
   offerId: string
@@ -32,6 +35,7 @@ export default class CommentController extends Controller{
     ]
     });
     this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create, middlewares: [
+      new PrivateRouteMiddleware(),
       new ValidateObjectIdMiddleware('offerId'),
       new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
     ]
@@ -43,9 +47,17 @@ export default class CommentController extends Controller{
     this.ok(res, fillDTO(CommentResponse, comments));
   }
 
-  public async create({body, params}: Request<core.ParamsDictionary | ParamsGetComments, Record<string, unknown>, CreateCommentDto>, res: Response): Promise<void> {
-    const comment = await this.commentService.create(body);
-    await this.offerService.incCommentCount(params.offerId);
+  public async create(req: Request<object, object, CreateCommentDto>, res: Response): Promise<void> {
+    if (!await this.offerService.exists(req.body.offerId)) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${req.body.offerId} not found`,
+        'CommentController'
+      );
+    }
+
+    const comment = await this.commentService.create({...req.body, userId: req.user.id});
+    await this.offerService.incCommentCount(req.body.offerId);
     this.created(res, fillDTO(CommentResponse, comment));
   }
 }

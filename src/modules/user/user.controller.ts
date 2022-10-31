@@ -12,9 +12,11 @@ import { injectable, inject } from 'inversify';
 import { Controller } from '../../common/controller/controller.js';
 import CreateUserDto from './dto/create-user.dto.js';
 import { StatusCodes } from 'http-status-codes';
-import { fillDTO } from '../../utils/common.js';
+import { fillDTO, createJWT } from '../../utils/common.js';
 import UserResponse from './response/user.response.js';
 import HttpError from '../../common/errors/http-error.js';
+import LoggedUserResponse from './response/logged-user.response.js';
+import { JWT_ALGORITM } from './user.constant.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -24,6 +26,8 @@ export default class UserController extends Controller {
     @inject(Component.IConfig) private readonly configService: IConfig
   ) {
     super(logger);
+
+    this.logger.info('Register routes for UserController');
 
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)]});
     this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateUserDto)]});
@@ -35,22 +39,28 @@ export default class UserController extends Controller {
         new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
       ]
-    }
-    );
+    });
+    this.addRoute({path: '/auth', method: HttpMethod.Get, handler: this.checkAuthenticate});
   }
 
   public async login({body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>, res: Response): Promise<void> {
-    const existsUser = await this.userService.findByEmail(body.email);
+    const user = await this.userService.verifyUser(body, this.configService.get('SALT'));
 
-    if (!existsUser) {
+    if (!user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found`,
+        'Unauthorized',
         'UserController'
       );
     }
 
-    this.ok(res, existsUser);
+    const token = await createJWT(
+      JWT_ALGORITM,
+      this.configService.get('SALT'),
+      {email: user.email, id: user.id}
+    );
+
+    this.ok(res, fillDTO(LoggedUserResponse, { email: user.email, token }));
   }
 
   public async create(
@@ -79,6 +89,12 @@ export default class UserController extends Controller {
     this.created(res, {
       filepath: req.file?.path
     });
+  }
+
+  public async checkAuthenticate(req: Request, res: Response) {
+    const user = await this.userService.findByEmail(req.user.email);
+
+    this.ok(res, fillDTO(LoggedUserResponse, user));
   }
 }
 

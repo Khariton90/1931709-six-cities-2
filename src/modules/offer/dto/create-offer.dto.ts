@@ -2,7 +2,7 @@ import { MIN_LENGTH_TEXT, MAX_LENGTH_TEXT } from './../../comment/comment.consta
 import { City } from '../../../types/city.type.js';
 import { Location } from '../../../types/location.type.js';
 import { User } from '../../../types/user.type.js';
-import {IsArray, IsDateString, IsInt, IsMongoId, Max, MaxLength, Min, MinLength, Contains, IsBoolean} from 'class-validator';
+import {IsArray, IsDateString, IsInt, Max, MaxLength, Min, MinLength, Contains, IsBoolean} from 'class-validator';
 
 export default class CreateOfferDto {
   @MinLength(10, {message: 'Minimum character length 10'})
@@ -62,6 +62,5 @@ export default class CreateOfferDto {
 
   public location!: Location;
 
-  @IsMongoId({message: 'userId field must be valid an id'})
   public userId!: string;
 }

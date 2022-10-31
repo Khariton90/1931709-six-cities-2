@@ -1,3 +1,4 @@
+import { PrivateRouteMiddleware } from './../../common/middlewares/private-route.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateDtoMiddleware } from './../../common/middlewares/validate-dto.middleware.js';
 import { ValidateObjectIdMiddleware } from './../../common/middlewares/validate-objectid.middleware.js';
@@ -40,6 +41,7 @@ export default class OfferController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateDtoMiddleware(CreateOfferDto)]
       ,
     });
@@ -49,6 +51,7 @@ export default class OfferController extends Controller {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
       ]
@@ -60,6 +63,7 @@ export default class OfferController extends Controller {
         method: HttpMethod.Patch,
         handler: this.update,
         middlewares: [
+          new PrivateRouteMiddleware(),
           new ValidateObjectIdMiddleware('offerId'),
           new ValidateDtoMiddleware(UpdateOfferDto),
           new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
@@ -76,6 +80,7 @@ export default class OfferController extends Controller {
 
   public async index(_req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.find();
+
     const offersResponse = fillDTO(OfferResponse, offers);
     this.ok(res, offersResponse);
   }
@@ -86,9 +91,11 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(OfferResponse, offer));
   }
 
-  public async create({body}: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>, res: Response): Promise<void> {
-    const newOffer = await this.offerService.create(body);
-    this.created(res, fillDTO(OfferResponse, newOffer));
+  public async create(req: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>, res: Response): Promise<void> {
+    const { body, user } = req;
+    const result = await this.offerService.create({...body, userId: user.id});
+    const offer = await this.offerService.findById(result.id);
+    this.created(res, fillDTO(OfferResponse, offer));
   }
 
   public async delete({params}: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response): Promise<void> {
