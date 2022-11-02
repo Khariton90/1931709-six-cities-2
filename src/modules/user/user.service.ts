@@ -1,3 +1,4 @@
+import { DEFAULT_AVATAR_FILE_NAME } from './user.constant.js';
 import { Component } from './../../types/component.types.js';
 import { inject, injectable } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
@@ -17,7 +18,7 @@ export default class UserService implements IUserService {
   ) {}
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity, BeAnObject>> {
-    const user = new UserEntity(dto);
+    const user = new UserEntity({...dto, avatarUrl: DEFAULT_AVATAR_FILE_NAME});
     user.setPassword(dto.password, salt);
 
     const result = this.userModel.create(user);

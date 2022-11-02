@@ -12,5 +12,4 @@ export default class CreateUserDto {
   public password!: string;
 
   public isPro!: string;
-  public avatarUrl!: string;
 }

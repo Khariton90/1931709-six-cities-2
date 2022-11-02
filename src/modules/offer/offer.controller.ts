@@ -15,18 +15,27 @@ import OfferResponse from './response/offer.response.js';
 import { fillDTO } from './../../utils/common.js';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
+import { IConfig } from '../../common/config/config.interface.js';
+import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
+import UploadImageResponse from './response/upload-image.response.js';
+import UpdateFavoriteOfferDto from './dto/update-favorite-offer.dto.js';
 
 type ParamsGetOffer = {
   offerId: string
+}
+
+type ParamsGetPemiumCity = {
+  city: string
 }
 
 @injectable()
 export default class OfferController extends Controller {
   constructor(
     @inject(Component.ILogger) logger: ILogger,
-    @inject(Component.IOffelService) private readonly offerService: IOfferService
+    @inject(Component.IOffelService) private readonly offerService: IOfferService,
+    @inject(Component.IConfig) configService: IConfig
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for OfferController');
 
@@ -34,6 +43,34 @@ export default class OfferController extends Controller {
       path: '/', method:
       HttpMethod.Get,
       handler: this.index
+    });
+
+    this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.Get,
+      handler: this.findFavorites,
+      middlewares: [
+        new PrivateRouteMiddleware()
+      ]
+    });
+
+    this.addRoute(
+      {
+        path: '/favorites/:offerId',
+        method: HttpMethod.Patch,
+        handler: this.update,
+        middlewares: [
+          new PrivateRouteMiddleware(),
+          new ValidateObjectIdMiddleware('offerId'),
+          new ValidateDtoMiddleware(UpdateFavoriteOfferDto),
+          new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+        ]
+      });
+
+    this.addRoute({
+      path: '/premium/:city',
+      method: HttpMethod.Get,
+      handler: this.findPremium
     });
 
     this.addRoute({
@@ -76,11 +113,28 @@ export default class OfferController extends Controller {
       handler: this.show,
       middlewares: [new ValidateObjectIdMiddleware('offerId')]
     });
+
+    this.addRoute({
+      path: '/:offerId/image',
+      method: HttpMethod.Post,
+      handler: this.uploadImage,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image')
+      ]
+    });
+  }
+
+  public async findPremium({params}: Request<core.ParamsDictionary | ParamsGetPemiumCity>, res: Response): Promise<void> {
+    const { city } = params;
+    const offers = await this.offerService.findPremium(city);
+    const offersResponse = fillDTO(OfferResponse, offers);
+    this.ok(res, offersResponse);
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.find();
-
     const offersResponse = fillDTO(OfferResponse, offers);
     this.ok(res, offersResponse);
   }
@@ -106,6 +160,27 @@ export default class OfferController extends Controller {
   public async update({body, params}: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateOfferDto>, res: Response): Promise<void> {
     const {offerId} = params;
     const updateOffer = await this.offerService.updateById(offerId, body);
+    this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, updateOffer));
+  }
+
+  public async uploadImage(req: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response) {
+    const { offerId } = req.params;
+    const updateDto = { previewImage: req.file?.filename };
+    await this.offerService.updateById(offerId, updateDto);
+    this.created(res, fillDTO(UploadImageResponse, {updateDto}));
+  }
+
+  public async findFavorites(_req: Request, res: Response): Promise<void> {
+    const offers = await this.offerService.findFavorites();
+    const offersResponse = fillDTO(OfferResponse, offers);
+    this.ok(res, offersResponse);
+  }
+
+  public async changeFavorites({body, params}: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateFavoriteOfferDto>, res: Response): Promise<void> {
+    const {offerId} = params;
+    const { isFavorite } = body;
+    const offer = await this.offerService.findById(offerId);
+    const updateOffer = await this.offerService.changeFavorites(offerId, {...offer, isFavorite: isFavorite});
     this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, updateOffer));
   }
 }
