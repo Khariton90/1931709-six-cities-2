@@ -4,4 +4,5 @@ export default class UpdateUserDto {
   public password?: string;
   public isPro?: string;
   public avatarUrl?: string;
+  public favorites?: string[];
 }

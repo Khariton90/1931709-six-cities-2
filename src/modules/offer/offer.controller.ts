@@ -1,3 +1,4 @@
+// import { IUserService } from './../user/user-service.interface.js';
 import { PrivateRouteMiddleware } from './../../common/middlewares/private-route.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateDtoMiddleware } from './../../common/middlewares/validate-dto.middleware.js';
@@ -33,6 +34,7 @@ export default class OfferController extends Controller {
   constructor(
     @inject(Component.ILogger) logger: ILogger,
     @inject(Component.IOffelService) private readonly offerService: IOfferService,
+    // @inject(Component.IUserService) private readonly userService: IUserService,
     @inject(Component.IConfig) configService: IConfig
   ) {
     super(logger, configService);
@@ -50,7 +52,8 @@ export default class OfferController extends Controller {
       method: HttpMethod.Get,
       handler: this.findFavorites,
       middlewares: [
-        new PrivateRouteMiddleware()
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(UpdateFavoriteOfferDto)
       ]
     });
 
@@ -176,11 +179,13 @@ export default class OfferController extends Controller {
     this.ok(res, offersResponse);
   }
 
-  public async changeFavorites({body, params}: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateFavoriteOfferDto>, res: Response): Promise<void> {
+  public async changeFavorites({params}: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateOfferDto>, res: Response): Promise<void> {
     const {offerId} = params;
-    const { isFavorite } = body;
     const offer = await this.offerService.findById(offerId);
-    const updateOffer = await this.offerService.changeFavorites(offerId, {...offer, isFavorite: isFavorite});
-    this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, updateOffer));
+
+    if (offer) {
+      const updateOffer = await this.offerService.changeFavorites(offerId, offer);
+      this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, updateOffer));
+    }
   }
 }

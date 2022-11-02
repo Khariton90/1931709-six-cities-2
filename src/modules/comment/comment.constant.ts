@@ -1,5 +1,11 @@
-export const MIN_LENGTH_TEXT = 5;
-export const MAX_LENGTH_TEXT = 1024;
-export const MIN_RATING = 1;
-export const MAX_RATING = 5;
 export const MAX_COMMENTS_COUNT = 50;
+
+export enum CommentLength {
+  Min = 5,
+  Max = 1024
+}
+
+export enum Rating {
+  Min = 1,
+  Max = 5
+}

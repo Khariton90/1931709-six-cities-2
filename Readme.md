@@ -47,3 +47,63 @@ git clone SSH-адрес_вашего_форка
 <a href="https://htmlacademy.ru/profession/fullstack"><img align="left" width="50" height="50" title="HTML Academy" src="https://up.htmlacademy.ru/static/img/intensive/nodejs/logo-for-github-2.png"></a>
 
 Репозиторий создан для обучения на профессиональном онлайн‑курсе «[Node.js. Профессиональная разработка REST API](https://htmlacademy.ru/profession/fullstack)» от [HTML Academy](https://htmlacademy.ru).
+
+
+### 5. Список переменных окружения
+
+DB_USER=admin - Логин для входа в базу данных.
+---
+DB_PASSWORD=test - Пароль для входу в базу данных.
+---
+DB_HOST=127.0.0.1 - Локальный хостинг базы данных.
+---
+DB_NAME=1931709-six-cities-2 - Название базы данных.
+---
+SALT=secret - Соль для кодировки пароля.
+---
+UPLOAD_DIRECTORY=./upload - Директория для загрузки изображений.
+---
+JWT_SECRET=secret - JSON Web Token.
+---
+STATIC_DIRECTORY_PATH=static - Папка со статичными изображениями. Необходимо для подстановки маршрута.
+
+### 6. Запуск приложения.
+
+Для запуска приложения необходимо поключиться к базе данных Mongo DB.
+Используя докер или иным способом.
+---
+
+Подключение при помощи docker: 
+
+docker-compose up -d
+
+Файл с настройками docker в корне проекта docker-compose.yml
+---
+Запуск сервера осущеcтвляется командой:
+
+npm run start:dev
+
+При запуске выводятся все необходимые для дальнейшей работы сообщения.
+---
+
+Cli команды:
+
+        --version:                     # выводит номер версии
+        --help:                        # выводит помощь
+        --import <path>:               # выводит импорт из TSV
+        --generator <n> <path> <url>:  # генерирует произвольное количество текстовых данных
+
+
+В корне проекта файл с примерами запросов:
+
+queries.http
+
+### 7. Сценарии.
+
+npm run start - Запуск сервера.
+---
+npm run start:dev - Запуск приложения при помощи nodemon.
+---
+npm run mock:server - Запуск мокового json сервера.
+---
+npm run ts - Запуск компилятора typeScript.

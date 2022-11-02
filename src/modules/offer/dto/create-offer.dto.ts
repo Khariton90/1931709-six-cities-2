@@ -1,4 +1,4 @@
-import { MIN_LENGTH_TEXT, MAX_LENGTH_TEXT } from './../../comment/comment.constant.js';
+import { CommentLength } from './../../comment/comment.constant.js';
 import { City } from '../../../types/city.type.js';
 import { Location } from '../../../types/location.type.js';
 import { User } from '../../../types/user.type.js';
@@ -9,8 +9,8 @@ export default class CreateOfferDto {
   @MaxLength(100, {message: 'Maximum character length 100'})
   public title!: string;
 
-  @MinLength(MIN_LENGTH_TEXT, {message: `Minimum character length description ${MIN_LENGTH_TEXT}`})
-  @MaxLength(MAX_LENGTH_TEXT, {message: `Maximum character length description ${MAX_LENGTH_TEXT}`})
+  @MinLength(CommentLength.Min, {message: `Minimum character length description ${CommentLength.Min}`})
+  @MaxLength(CommentLength.Max, {message: `Maximum character length description ${CommentLength.Max}`})
   public description!: string;
 
   @IsDateString({}, {message: 'postDate must be valid ISO date'})
@@ -22,12 +22,6 @@ export default class CreateOfferDto {
   @IsObject({
     message: 'field city must be Object city Example:{name: Paris, location: { latitude: 48.85661, longitude: 2.351499 } }'})
   public city!: City;
-
-  // @Contains('jpg', {message: 'previewImage must nave jpg'})
-  // public previewImage!: string;
-
-  // @IsArray({message: 'field images must be a array'})
-  // public images!: string[];
 
   @IsBoolean({message: 'field isPremium must be a boolean value'})
   public isPremium!: boolean;

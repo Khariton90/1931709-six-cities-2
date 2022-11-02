@@ -19,7 +19,6 @@ export class AuthentificateMiddleware implements IMiddleware {
     try {
       const { payload } = await jose.jwtVerify(token, createSecretKey(this.jwtSecret, 'utf-8'));
       req.user = { email: payload.email as string, id: payload.id as string };
-
       return next();
     } catch {
 

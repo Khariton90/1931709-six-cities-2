@@ -2,15 +2,15 @@ import { City } from '../../../types/city.type.js';
 import { Location } from '../../../types/location.type.js';
 import { User } from '../../../types/user.type.js';
 import {IsArray, IsDateString, IsInt, IsMongoId, Max, MaxLength, Min, MinLength, IsBoolean} from 'class-validator';
-import { MAX_LENGTH_TEXT, MIN_LENGTH_TEXT } from '../../comment/comment.constant.js';
+import { CommentLength } from '../../comment/comment.constant.js';
 
 export default class UpdateOfferDto {
   @MinLength(10, {message: 'Minimum character length 10'})
   @MaxLength(100, {message: 'Maximum character length 100'})
   public title?: string;
 
-  @MinLength(MIN_LENGTH_TEXT, {message: `Minimum character length description ${MIN_LENGTH_TEXT}`})
-  @MaxLength(MAX_LENGTH_TEXT, {message: `Maximum character length description ${MAX_LENGTH_TEXT}`})
+  @MinLength(CommentLength.Min, {message: `Minimum character length description ${CommentLength.Min}`})
+  @MaxLength(CommentLength.Max, {message: `Maximum character length description ${CommentLength.Max}`})
   public description?: string;
 
   @IsDateString({}, {message: 'postDate must be valid ISO date'})

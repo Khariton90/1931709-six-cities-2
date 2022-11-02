@@ -1,6 +1,6 @@
+import { City } from './../../types/city.type';
 import { UserEntity } from './../user/user.entity.js';
 import typegoose, { defaultClasses, getModelForClass, Ref } from '@typegoose/typegoose';
-import { City } from '../../types/city.type.js';
 import { Location } from '../../types/location.type.js';
 
 const {prop, modelOptions} = typegoose;
@@ -25,13 +25,11 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop()
   public cityName!: string;
 
-  @prop()
   public city!: City;
 
   @prop({default: ''})
   public previewImage!: string;
 
-  @prop({ default: []})
   public images!: string[];
 
   @prop({default: false})
@@ -55,13 +53,11 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop()
   public price!: number;
 
-  @prop({default: []})
   public amenityes!: string[];
 
   @prop({default: 0})
   public comments!: number;
 
-  @prop()
   public location!: Location;
 
   @prop({

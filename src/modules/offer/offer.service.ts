@@ -87,7 +87,6 @@ export default class OfferService implements IOfferService {
   }
 
   public async changeFavorites(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
-    console.log(dto);
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true}).populate(['userId']).exec();
   }

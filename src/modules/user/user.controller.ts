@@ -60,9 +60,9 @@ export default class UserController extends Controller {
       this.configService.get('SALT'),
       {email: user.email, id: user.id}
     );
-
     this.ok(res, {...fillDTO(LoggedUserResponse, user), token});
   }
+
 
   public async create(
     {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,

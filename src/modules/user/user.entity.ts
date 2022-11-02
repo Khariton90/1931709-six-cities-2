@@ -49,6 +49,8 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
   @prop({required: true, default: ''})
   public avatarUrl!: string;
+
+  public favorites!: string[];
 }
 
 export const UserModel = getModelForClass(UserEntity);
