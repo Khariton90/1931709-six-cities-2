@@ -8,7 +8,8 @@ import { IConfig } from '../common/config/config.interface.js';
 import { ILogger } from '../common/logger/logger.interface.js';
 import { getURI } from '../utils/db.js';
 import { IController } from '../common/controller/controller.interface.js';
-
+import { getFullServerPath } from '../utils/common.js';
+import cors from 'cors';
 
 @injectable()
 export default class Application {
@@ -39,8 +40,14 @@ export default class Application {
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
 
+    this.expressApp.use(
+      '/static',
+      express.static(this.config.get('STATIC_DIRECTORY_PATH'))
+    );
+
     const authentificateMiddleware = new AuthentificateMiddleware(this.config.get('JWT_SECRET'));
     this.expressApp.use(authentificateMiddleware.execute.bind(authentificateMiddleware));
+    this.expressApp.use(cors());
   }
 
   public initExceptionFilters() {
@@ -65,6 +72,6 @@ export default class Application {
     this.initRoutes();
     this.initExceptionFilters();
     this.expressApp.listen(this.config.get('PORT'));
-    this.logger.info(`Server has been started on http://localhost:${this.config.get('PORT')}`);
+    this.logger.info(`Server has been started on ${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}`);
   }
 }

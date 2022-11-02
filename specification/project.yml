@@ -121,6 +121,70 @@ paths:
         "401":
           description: Пользователь неавторизован.
 
+  /offers/premium/:city:
+    get:
+      tags:
+        - "premium"
+      summary: Получение премиальных предложений.
+      description: Получение 3-х премиальных предложений для города.
+
+      responses:
+        "200":
+          description: Получен список премиальных предложений.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+        "404":
+          description: Предложения не найдены.
+
+  /offers/favorites:
+    get:
+      tags:
+        - "favorites"
+      summary: Получение избранных предложений.
+      description: Получения списка предложений, добавленных в избранное.
+
+      responses:
+        "200":
+          description: Получен список предложений добавленных в избранное
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+                required: true
+
+        "401":
+          description: Пользователь неавторизован, необходимо пройти авторизацию.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedError'
+
+  /offers/favorites/:offerId:
+    patch:
+      tags:
+        - "favorites"
+      summary: Добавить/Убрать в/из избранное.
+      description: Добавление или удаление предложения из избранного.
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/favorites'
+                required: true
+                userTokenRequest: 'fdsfdfsfsdf'
+
+      responses:
+        "201":
+          description: Предложение добавлено/удалено в/из избранное.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
   /users/login:
     post:
       tags:
@@ -147,10 +211,83 @@ paths:
         "400":
           description: Неверный формат данных
 
-        "404":
+        "401":
           description: Пользователь не найден.
 
+  /users/register:
+    post:
+      tags:
+        - "users"
+      summary: Регистрация пользователя
+      description: Регистрация нового пользователя
+
+      requestBody:
+        description: Информация для регистрации
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/users'
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users'
+
+        "409":
+          description: Конфликт. Пользователь существует.
+
+        "400":
+          description: Неверный формат данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  /users/auth:
+    get:
+      tags:
+        - "users"
+      summary: Проверка авторизации
+      description: Проверка авторизации пользователя
+
+      requestBody:
+        description: Информация для получения сведений об авторизации пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userTokenRequest'
+
+      responses:
+        "200":
+          description: Пользователь авторизован.
+
+        "401":
+          description: Пользователь неавторизован.
+
+        "500":
+          description: Серверная ошибка. Не найден заголовок.
+
   /comments/:offerId:
+    get:
+      tags:
+        - "comments"
+      summary: Получение комментариев.
+      description: Получение комментариев по предложению.
+
+      responses:
+        "200":
+          description: Получен список комментариев в виде массива.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comments'
+        
+        "404":
+          description: Предложение с данным идентификатором не найдено.
+
     post:
       tags:
         - "comments"
@@ -177,7 +314,7 @@ paths:
           description: Неверный формат данных
 
         "404":
-          description: Пользователь не найден.
+          description: Предложение не найдено.
 
 components:
   schemas:
@@ -304,13 +441,20 @@ components:
     usersLogin:
       type: object
       properties:
-        password:
+        token:
           type: string
-          example: "4a83854cf6f0112b4295bddd535a9b3fbe54a3f90e853b59d42e4bed553c55a4"
+          example: "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM2MTg0NTgyMDQ5NjZjMjMzMmFiNTBiIiwiaWF0IjoxNjY3MzgwNDkyLCJleHAiOjE2Njc1NTMyOTJ9.7Y_bSq4DW6I_aNbh2urK0reE03R4HF4c4kBnWozgbxU"
 
         email:
           type: string
           example: "mail@gmail.com"
+    
+    userTokenRequest:
+      type: object
+      properties:
+        Autorization:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM2MTg0NTgyMDQ5NjZjMjMzMmFiNTBiIiwiaWF0IjoxNjY3MzgwNDkyLCJleHAiOjE2Njc1NTMyOTJ9.7Y_bSq4DW6I_aNbh2urK0reE03R4HF4c4kBnWozgbxU"
 
     comments:
       type: object
@@ -319,14 +463,56 @@ components:
           type: string
           example: Hello world
 
+        postDate:
+          type: string
+          example: ISODate('2022-11-02T10:45:55.437Z')
+
         rating:
           type: number
           example: 5
 
-        userId:
+        author:
           type: string
           example: "634e92ea7dd68f8986a447ca"
 
-        offerId:
+    favorites:
+      type: object
+      properties:
+        isFavorite:
+          type: boolean
+          example: true
+    
+    error:
+      type: object
+      properties:
+        errorType:
           type: string
-          example: "634e92ea7dd68f8986a447cc"
+          example: "VALIDATION_ERROR"
+        
+        error:
+          type: string
+          example: "Validation error"
+
+        details:
+          type: array
+          example: [
+                {
+                    "property": "email",
+                    "value": "evgeniy2mail.ru",
+                    "messages": ["email must be valid"]
+                }]
+
+    unauthorizedError:
+      type: object
+      properties:
+        errorType:
+          type: string
+          example: "COMMON_ERROR"
+        
+        error:
+          type: string
+          example: "Unauthorized"
+
+        details:
+          type: array
+          example: []

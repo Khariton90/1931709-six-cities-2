@@ -5,8 +5,6 @@ import {IsArray, IsDateString, IsInt, IsMongoId, Max, MaxLength, Min, MinLength,
 import { MAX_LENGTH_TEXT, MIN_LENGTH_TEXT } from '../../comment/comment.constant.js';
 
 export default class UpdateOfferDto {
-  public _id!: string;
-
   @MinLength(10, {message: 'Minimum character length 10'})
   @MaxLength(100, {message: 'Maximum character length 100'})
   public title?: string;
@@ -20,15 +18,13 @@ export default class UpdateOfferDto {
 
   public city?: City;
 
-  public previewImage?: string;
+  public cityName?: string;
 
-  @IsArray({message: 'field images must be a array'})
-  public images?: string[];
+  public previewImage?: string;
 
   @IsBoolean({message: 'field isPremium must be a boolean value'})
   public isPremium?: boolean;
 
-  @IsBoolean({message: 'field isFavorite must be a boolean value'})
   public isFavorite?: boolean;
 
   @IsInt({message: 'field rating must be integer'})
@@ -57,9 +53,6 @@ export default class UpdateOfferDto {
   public amenityes?: string[];
 
   public author?: User;
-
-  @IsInt({message: 'field comments must be integer'})
-  public comments?: number;
 
   public location?: Location;
 

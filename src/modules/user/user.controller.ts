@@ -17,20 +17,22 @@ import UserResponse from './response/user.response.js';
 import HttpError from '../../common/errors/http-error.js';
 import LoggedUserResponse from './response/logged-user.response.js';
 import { JWT_ALGORITM } from './user.constant.js';
+import UploadUserAvatarResponse from './response/upload-avatar.responce.js';
 
 @injectable()
 export default class UserController extends Controller {
   constructor(
     @inject(Component.ILogger) logger: ILogger,
     @inject(Component.IUserService) private readonly userService: IUserService,
-    @inject(Component.IConfig) private readonly configService: IConfig
+    @inject(Component.IConfig) configService: IConfig,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for UserController');
 
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login, middlewares: [new ValidateDtoMiddleware(LoginUserDto)]});
     this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleware(CreateUserDto)]});
+    this.addRoute({path: '/auth', method: HttpMethod.Get, handler: this.checkAuthenticate});
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post, handler: this.uploadAvatar,
@@ -40,7 +42,6 @@ export default class UserController extends Controller {
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
       ]
     });
-    this.addRoute({path: '/auth', method: HttpMethod.Get, handler: this.checkAuthenticate});
   }
 
   public async login({body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>, res: Response): Promise<void> {
@@ -60,7 +61,7 @@ export default class UserController extends Controller {
       {email: user.email, id: user.id}
     );
 
-    this.ok(res, fillDTO(LoggedUserResponse, { email: user.email, token }));
+    this.ok(res, {...fillDTO(LoggedUserResponse, user), token});
   }
 
   public async create(
@@ -85,16 +86,17 @@ export default class UserController extends Controller {
     );
   }
 
-  public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
-  }
-
   public async checkAuthenticate(req: Request, res: Response) {
     const user = await this.userService.findByEmail(req.user.email);
 
     this.ok(res, fillDTO(LoggedUserResponse, user));
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    const { userId } = req.params;
+    const uploadFile = {avatarUrl: req.file?.filename};
+    await this.userService.updateById(userId, uploadFile);
+    this.created(res, fillDTO(UploadUserAvatarResponse, uploadFile));
   }
 }
 

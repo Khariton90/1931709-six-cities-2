@@ -14,6 +14,9 @@ export default class OfferResponse {
   public postDate!: Date;
 
   @Expose()
+  public cityName!: string;
+
+  @Expose()
   public city!: City;
 
   @Expose()

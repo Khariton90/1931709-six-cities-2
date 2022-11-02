@@ -2,7 +2,7 @@ import { MIN_LENGTH_TEXT, MAX_LENGTH_TEXT } from './../../comment/comment.consta
 import { City } from '../../../types/city.type.js';
 import { Location } from '../../../types/location.type.js';
 import { User } from '../../../types/user.type.js';
-import {IsArray, IsDateString, IsInt, Max, MaxLength, Min, MinLength, Contains, IsBoolean} from 'class-validator';
+import {IsArray, IsDateString, IsInt, Max, MaxLength, Min, MinLength, IsBoolean, IsObject, IsString} from 'class-validator';
 
 export default class CreateOfferDto {
   @MinLength(10, {message: 'Minimum character length 10'})
@@ -16,13 +16,18 @@ export default class CreateOfferDto {
   @IsDateString({}, {message: 'postDate must be valid ISO date'})
   public postDate!: Date;
 
+  @IsString({message: 'field cityName is required'})
+  public cityName!: string;
+
+  @IsObject({
+    message: 'field city must be Object city Example:{name: Paris, location: { latitude: 48.85661, longitude: 2.351499 } }'})
   public city!: City;
 
-  @Contains('jpg', {message: 'previewImage must nave jpg'})
-  public previewImage!: string;
+  // @Contains('jpg', {message: 'previewImage must nave jpg'})
+  // public previewImage!: string;
 
-  @IsArray({message: 'field images must be a array'})
-  public images!: string[];
+  // @IsArray({message: 'field images must be a array'})
+  // public images!: string[];
 
   @IsBoolean({message: 'field isPremium must be a boolean value'})
   public isPremium!: boolean;

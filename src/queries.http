@@ -1,21 +1,19 @@
-GET http://localhost:3123/api HTTP/1.1
-
-###
-
+##Создание нового предложения
 POST  http://localhost:4000/offers/create HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM2MTg0NTgyMDQ5NjZjMjMzMmFiNTBiIiwiaWF0IjoxNjY3MzM1MjgyLCJleHAiOjE2Njc1MDgwODJ9.VIjSjvSAwi60hXXNvqFAlziYmxzLXAQW-8AlCVtMA5w
 
 {
     "title": "Nice apartment",
-    "images": [
-        "http://image.jpg",
-        "http://image.jpg",
-        "http://image.jpg",
-        "http://image.jpg",
-        "http://image.jpg",
-        "http://image.jpg"
-    ],
-    "isPremium": false,
+    "cityName": "Cologne",
+    "city": {
+        "name": "Cologne",
+        "location": {
+            "latitude": 50.938361,
+            "longitude": 6.959974
+        }
+    },
+    "isPremium": true,
     "isFavorite": false,
     "description": "hello world",
     "postDate": "2022-09-08T14:30:30.182Z",
@@ -25,27 +23,90 @@ Content-Type: application/json
     "price": 1000,
     "comments": 0,
     "amenityes": ["Air"],
+    "location": {
+        "latitude": 48.843610000000005,
+        "longitude": 2.338499
+    },
+    "userId": "63618458204966c2332ab50b"
+}
+###
+
+##Редактирование предложения
+PATCH http://localhost:4000/offers/6362642401570ae7b2f97e21/update HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM2MTg0NTgyMDQ5NjZjMjMzMmFiNTBiIiwiaWF0IjoxNjY3MzM1MjgyLCJleHAiOjE2Njc1MDgwODJ9.VIjSjvSAwi60hXXNvqFAlziYmxzLXAQW-8AlCVtMA5w
+
+{
+    "title": "Nice apartment",
+    "images": [
+
+    ],
+    "isPremium": false,
+    "isFavorite": true,
+    "description": "hello world",
+    "postDate": "2022-09-08T14:30:30.182Z",
+    "rating": 2,
+    "rooms": 2,
+    "guests": 5,
+    "price": 3000,
+    "comments": 0,
+    "amenityes": ["Air"],
     "previewImage": "http://imagePreview.jpg",
     "location": {
         "latitude": 48.843610000000005,
         "longitude": 2.338499
     },
-    "userId": "634e92ea7dd68f8986a447ca"
+    "userId": "63618458204966c2332ab50b"
 }
 ###
 
+## Удаление предложения
+DELETE  http://localhost:4000/offers/6360f3b49c090776b282fb7c/delete HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM1ZDgxNjY1NzQ1ZjUxMDQzYTAwYjJhIiwiaWF0IjoxNjY3Mjk4MTk4LCJleHAiOjE2Njc0NzA5OTh9._GwC-j-NhHMMgm7AxYVd2fCjOWJiXtr5PNEuX40QC60
+###
+
+## Получение списка предложений по аренде
+GET  http://localhost:4000/offers HTTP/1.1
+Content-Type: application/json
+###
+
+## Получение детальной информации о предложении.
+GET  http://localhost:4000/offers/63618489204966c2332ab50e HTTP/1.1
+Content-Type: application/json
+###
+
+## Получение списка комментариев для предложения.
+GET  http://localhost:4000/comments/63613753a09a825dcc3e371c HTTP/1.1
+
+###
+
+## Добавление комментария для предложения.
+POST  http://localhost:4000/comments/63618489204966c2332ab50e HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM2MTM2MTdhMDlhODI1ZGNjM2UzNzBhIiwiaWF0IjoxNjY3MzE1MzY4LCJleHAiOjE2Njc0ODgxNjh9.wQ2HVQxMeExO0hdivpAzHjaeImO4RHyuTwrt6tHyeXc
+
+{
+    "commentText": "Hello world!!!",
+    "postDate": "2022-11-02T10:45:55.437Z",
+    "rating": 5,
+    "userId": "63613617a09a825dcc3e370a"
+}
+###
+
+## Создание нового пользователя.
 POST  http://localhost:4000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "Evgeniy",
-    "email": "evgeniy@mail.ru",
+    "name": "Evgeniy2",
+    "email": "evgeniy2mail.ru",
     "password": "123456",
     "isPro": "true",
     "avatarUrl": "evgeniy.png"
 }
 ###
 
+##  Вход в закрытую часть приложения.
 POST http://localhost:4000/users/login HTTP/1.1
 Content-Type: application/json
 
@@ -55,40 +116,41 @@ Content-Type: application/json
 }
 ###
 
-DELETE  http://localhost:4000/offers/635419bfb84a94dbcc83e4d9/delete HTTP/1.1
+##  Проверка состояния пользователя.
+GET http://localhost:4000/users/auth HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM2MTM2MTdhMDlhODI1ZGNjM2UzNzBhIiwiaWF0IjoxNjY3MzE1MzY4LCJleHAiOjE2Njc0ODgxNjh9.wQ2HVQxMeExO0hdivpAzHjaeImO4RHyuTwrt6tHyeXc
+
 ###
 
-PATCH   http://localhost:4000/offers/634e92ea7dd68f8986a447cc HTTP/1.1
+## Получение премиальных предложений
+GET  http://localhost:4000/offers/premium/cologne HTTP/1.1
 Content-Type: application/json
+###
+
+
+###
+
+## Получения списка предложений, добавленных в избранное.
+
+GET  http://localhost:4000/offers/favorites HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM2MTg0NTgyMDQ5NjZjMjMzMmFiNTBiIiwiaWF0IjoxNjY3MzM1MjgyLCJleHAiOjE2Njc1MDgwODJ9.VIjSjvSAwi60hXXNvqFAlziYmxzLXAQW-8AlCVtMA5w
+
+###
+
+## Добавление/удаление предложения в/из избранное.
+PATCH   http://localhost:4000/offers/favorites/63618489204966c2332ab50e HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM2MTg0NTgyMDQ5NjZjMjMzMmFiNTBiIiwiaWF0IjoxNjY3MzM1MjgyLCJleHAiOjE2Njc1MDgwODJ9.VIjSjvSAwi60hXXNvqFAlziYmxzLXAQW-8AlCVtMA5w
 
 {
-    "_id": "634e92ea7dd68f8986a447cc",
-    "title": "Nice Apartment"
+    "isFavorite": true
 }
-###
 
-## Получение офферов
-GET  http://localhost:4000/offers HTTP/1.1
-Content-Type: application/json
-###
-
-GET  http://localhost:4000/comments/634e92ea7dd68f8986a447cc HTTP/1.1
-
-###
-
-POST  http://localhost:4000/comments/634e92ea7dd68f8986a447cc HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM1ZDgxNjY1NzQ1ZjUxMDQzYTAwYjJhIiwiaWF0IjoxNjY3MDc2NzY1LCJleHAiOjE2NjcyNDk1NjV9.wH5onG0ueaEbs5uU3Renm97z_PDKA4yHDNHwySL54KY
-
-{
-    "commentText": "Hello worlddsadasdad!!!",
-    "rating": 5,
-    "offerId": "634e92ea7dd68f8986a447cc"
-}
 ###
 
 ## Отправка аватарки пользователю
-
 POST http://localhost:4000/users/634e92ea7dd68f8986a447bf/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -99,10 +161,4 @@ Content-Type: image/png
 < /Users/china/Documents/avatar.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
-###
-
-## Проверка токена пользователя
-GET  http://localhost:4000/users/auth HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImV2Z2VuaXlAbWFpbC5ydSIsImlkIjoiNjM1ZDgxNjY1NzQ1ZjUxMDQzYTAwYjJhIiwiaWF0IjoxNjY3MDc2NzY1LCJleHAiOjE2NjcyNDk1NjV9.wH5onG0ueaEbs5uU3Renm97z_PDKA4yHDNHwySL54KY
 ###
